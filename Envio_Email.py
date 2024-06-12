@@ -38,7 +38,7 @@ def envia_email():
     mail.HTMLBody = variaveis()[0] + variaveis()[3]
 
     # Anexos
-    #attachment = os.getcwd() + '\\imgLucasP.txt'
+    #attachment = os.getcwd() + '\\imgLucasP.png'
     #mail.Attachments.Add(attachment)
 
     mail.Send() # Enviar Email
