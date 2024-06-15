@@ -2,10 +2,32 @@
 # Outlook object com funlçao
 
 import win32com.client as win32
+from email.mime.image import MIMEImage
 import os
 import time
 
+def path_AssRemetente(Ass_Remetente):
+    # Caminho para a imagem
+    image_path = os.path.join(os.getcwd(), Ass_Remetente)
+
+    # Abrindo a imagem em modo binário
+    with open(image_path, 'rb') as f:
+        img_Ass = f.read()
+    
+    # Cria um objeto MIMEImage
+    img = MIMEImage(img_Ass)
+
+    # Adiciona um 'Content-ID' para a imagem
+    img.add_header('Content-ID', '<{}>'.format(Ass_Remetente))
+
+    return image_path
+
 def variaveis():
+
+    image_path = path_AssRemetente('AssLucasP.png')
+    assLucasP = '''<span style='font-family:calibri;'><br>Atenciosamente,<span><br>
+    <img src=cid:{}>'''.format(image_path)
+
     txtPrincipal = '''<p style='font-family:calibri;'>Caro colaborador(a),<br><br>
     Com o objetivo de padronizar as assinaturas de e-mail dos funcionários do Grupo Camed,
     <b>estamos enviando sua assinatura ajustada em anexo, juntamente com o manual contendo o passo a passo a ser seguido</b> para a atualização.<br>
@@ -21,31 +43,30 @@ def variaveis():
     <b>Alguns ajustes foram realizados em sua assinatura de e-mail.</b><br>
     Portanto, <b>você deverá substituir a assinatura em uso pela que se encontra em anexo.</b><br></p>'''
 
-    assLucasP = '''<span style="font-family:calibri;"><br>Atenciosamente,</span><br>
-    <img src="file:///E:/Bkp/pc/Programas camed/Lucas P/MPython/Envio_Email_Lote/ImgLucasP.png">'''
-
-
     return txtPrincipal, txtPrincipal2, txtPrincipal3, assLucasP
 
 def envia_email():
-    outlook = win32.Dispatch('outlook.application')
+    txtPrincipal, txtPrincipal2, txtPrincipal3, assLucasP = variaveis()
+
+    outlook = win32.Dispatch('outlook.application') # Abrir o Outlook
     mail = outlook.CreateItem(0)  # Criar um novo email
+
     mail.Display()  # Exibir o email
-    mail.To = 'guilhermesla@camed.com.br' # Destinatário
+    
+    mail.To = 'lucasprs@camed.com.br' # Destinatário
     mail.CC = '' # Com Cópia
+    
     mail.Subject = 'Assunto do Email' # Assunto
+    
     mail.Body = 'Corpo do Email' # Corpo do Email
-    mail.HTMLBody = variaveis()[0] + variaveis()[3]
+    mail.HTMLBody = txtPrincipal + assLucasP
 
-    # Anexos
-    #attachment = os.getcwd() + '\\imgLucasP.png'
-    #mail.Attachments.Add(attachment)
+    # Anexos usar imagem assLucasP da pasta do projeto
+    # assRemetente = os.getcwd() + '\\AssLucasP.png'
+    # mail.Attachments.Add(attachment)
 
-    mail.Send() # Enviar Email
+    #mail.Send() # Enviar Email
 
-i = 0
-while i < 1:
-    envia_email()
-    i += 1
-    print(i)
+envia_email()
+
 print('Emails Enviados com Sucesso')
