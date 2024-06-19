@@ -20,13 +20,14 @@ def path_AssRemetente(Ass_Remetente):
     # Adiciona um 'Content-ID' para a imagem
     img.add_header('Content-ID', '<{}>'.format(Ass_Remetente))
 
-    return image_path
+    return img
 
 def variaveis():
 
-    image_path = path_AssRemetente('AssLucasP.png')
+    assremetenteEnvio = 'AssLucasP.png'
+
     assLucasP = '''<span style='font-family:calibri;'><br>Atenciosamente,<span><br>
-    <img src=cid:{}>'''.format(image_path)
+    <img src="file:///E:/Bkp/pc/Programas camed/Lucas P/MPython/bkp/bk1/EnvioEmailLote/{}">'''.format(assremetenteEnvio)
 
     txtPrincipal = '''<p style='font-family:calibri;'>Caro colaborador(a),<br><br>
     Com o objetivo de padronizar as assinaturas de e-mail dos funcionários do Grupo Camed,
@@ -62,8 +63,8 @@ def envia_email():
     mail.HTMLBody = txtPrincipal + assLucasP
 
     # Anexos usar imagem assLucasP da pasta do projeto
-    # assRemetente = os.getcwd() + '\\AssLucasP.png'
-    # mail.Attachments.Add(attachment)
+    assRemetente = os.getcwd() + '\\AssLucasP.png'
+    mail.Attachments.Add(assRemetente)
 
     #mail.Send() # Enviar Email
 
