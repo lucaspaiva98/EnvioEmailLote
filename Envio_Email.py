@@ -1,5 +1,5 @@
 # Envio de Email em Lote usando outlook
-# Outlook object com funlçao
+# Outlook object com funçao
 
 import win32com.client as win32
 from email.mime.image import MIMEImage
@@ -25,7 +25,6 @@ def abrirarquivos():
     data = pd.read_excel(file_path, dtype=str)  # tudo como texto
 
     # Dados do usuário
-    empresa = data['(Grupo/Saúde/Creche Corretora/Fortal)'].tolist()  # tolist() transforma em lista
     nome = data['Nome_Funcionario'].tolist()
     setor = data['Setor'].tolist()
     funcao = data['Funcao'].tolist()
@@ -34,7 +33,7 @@ def abrirarquivos():
     ramal = data['Ramal'].tolist()
     email = data['Email'].tolist()
 
-    return empresa, nome, setor, funcao, celular, telefone, ramal, email
+    return nome, setor, funcao, celular, telefone, ramal, email
 
 def path_AssRemetente(Ass_Remetente):
     # Caminho para a imagem
@@ -52,10 +51,10 @@ def path_AssRemetente(Ass_Remetente):
 
     return img
 
-def variaveis():
+def variaveistxt():
+    nome, setor, funcao, celular, telefone, ramal, email = abrirarquivos()
 
     assremetenteEnvio = 'AssLucasP.png'
-
     assLucasP = '''<span style='font-family:calibri;'><br>Atenciosamente,<span><br>
     <img src="file:///E:/Bkp/pc/Programas camed/Lucas P/MPython/bkp/bk1/EnvioEmailLote/{}">'''.format(assremetenteEnvio)
 
@@ -65,20 +64,23 @@ def variaveis():
     Será necessário <b>SALVAR a imagem enviada em anexo em seu computador</b>
     e <b>ACESSAR o manual referente à ferramenta de e-mail utilizada: Outlook, Thunderbird ou Webmail (OWA).</b><br></p>'''
 
-    txtPrincipal2 = '''<p style='font-family:calibri;'>Caro colaborador(a),<br><br>
-    <b>Estamos enviando sua assinatura ajustada em anexo, juntamente com o manual contendo o passo a passo a ser seguido</b> para a atualização.<br>
-    Será necessário <b>salvar a imagem da sua assinatura em seu computador</b><br>
-    e <b>acessar o manual referente à ferramenta de e-mail utilizada: Outlook, Thunderbird ou Webmail (OWA).</b><br></p>'''
+    dados = '''<p style='font-family:calibri;'>Seguem as informações da assinatura em anexo:<br><br>
+    <u>Nome</u>: {} <br>
+    <u>Setor</u>: {} <br>
+    <u>Função</u>: {} <br>
+    <u>Celular</u>: {} <br>
+    <u>Telefone</u>: {} <br>
+    <u>Ramal</u>: {} <br>
+    <u>E-mail</u>: {} <br></p>'''.format(nome, setor, funcao, celular, telefone, ramal, email)
 
-    txtPrincipal3 = '''<p style='font-family:calibri;'>Caro colaborador(a),<br><br>
-    <b>Alguns ajustes foram realizados em sua assinatura de e-mail.</b><br>
-    Portanto, <b>você deverá substituir a assinatura em uso pela que se encontra em anexo.</b><br></p>'''
+    texto3 = '''<p style='font-family:calibri;'>Em caso de dúvidas na execução do procedimento ou em caso de mudança na assinatura enviada,
+    retornar este e-mail clicando em <b>Responder a Todos</b>.
+    <br><br>Desde já, agradecemos sua colaboração!<br></p>'''
 
-    return txtPrincipal, txtPrincipal2, txtPrincipal3, assLucasP
+    return txtPrincipal, dados, texto3, assLucasP, nome
 
 def envia_email():
-    empresa, nome, setor, funcao, celular, telefone, ramal, email = abrirarquivos()
-    txtPrincipal, txtPrincipal2, txtPrincipal3, assLucasP = variaveis()
+    nome, txtPrincipal, dados, texto3, assLucasP = variaveistxt()
 
     outlook = win32.Dispatch('outlook.application') # Abrir o Outlook
     mail = outlook.CreateItem(0)  # Criar um novo email
@@ -90,8 +92,8 @@ def envia_email():
     
     mail.Subject = 'Assunto do Email - {}'.format(nome)  # Assunto
     
-    mail.Body = 'Corpo do Email' # Corpo do Email
-    mail.HTMLBody = txtPrincipal + assLucasP
+    # Corpo do Email
+    mail.HTMLBody = txtPrincipal + dados + texto3 + assLucasP
 
     # Anexos usar imagem assLucasP da pasta do projeto
     assRemetente = os.getcwd() + '\\AssLucasP.png'
