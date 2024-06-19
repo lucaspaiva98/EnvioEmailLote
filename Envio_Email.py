@@ -4,7 +4,37 @@
 import win32com.client as win32
 from email.mime.image import MIMEImage
 import os
-import time
+import tkinter as tk
+from tkinter import filedialog, Label, Entry, Button, Tk
+import pandas as pd
+
+def buscadorDeArquivo():
+
+    root = tk.Tk() # cria uma janela
+    root.withdraw() # esconde a janela
+
+    # abre o explorador de arquivos e escolhe o arquivo txt
+    file_path = filedialog.askopenfilename() 
+
+    root.destroy() # fecha a janela
+    return file_path
+
+def abrirarquivos():
+    # Abrir o arquivo
+    file_path = buscadorDeArquivo()
+    data = pd.read_excel(file_path, dtype=str)  # tudo como texto
+
+    # Dados do usuário
+    empresa = data['(Grupo/Saúde/Creche Corretora/Fortal)'].tolist()  # tolist() transforma em lista
+    nome = data['Nome_Funcionario'].tolist()
+    setor = data['Setor'].tolist()
+    funcao = data['Funcao'].tolist()
+    celular = data['Celular Institucional'].tolist()
+    telefone = data['Contato_Empresarial'].tolist()
+    ramal = data['Ramal'].tolist()
+    email = data['Email'].tolist()
+
+    return empresa, nome, setor, funcao, celular, telefone, ramal, email
 
 def path_AssRemetente(Ass_Remetente):
     # Caminho para a imagem
@@ -47,6 +77,7 @@ def variaveis():
     return txtPrincipal, txtPrincipal2, txtPrincipal3, assLucasP
 
 def envia_email():
+    empresa, nome, setor, funcao, celular, telefone, ramal, email = abrirarquivos()
     txtPrincipal, txtPrincipal2, txtPrincipal3, assLucasP = variaveis()
 
     outlook = win32.Dispatch('outlook.application') # Abrir o Outlook
@@ -57,7 +88,7 @@ def envia_email():
     mail.To = 'lucasprs@camed.com.br' # Destinatário
     mail.CC = '' # Com Cópia
     
-    mail.Subject = 'Assunto do Email' # Assunto
+    mail.Subject = 'Assunto do Email - {}'.format(nome)  # Assunto
     
     mail.Body = 'Corpo do Email' # Corpo do Email
     mail.HTMLBody = txtPrincipal + assLucasP
