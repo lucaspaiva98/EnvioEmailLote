@@ -5,7 +5,7 @@ import win32com.client as win32
 from email.mime.image import MIMEImage
 import os
 import tkinter as tk
-from tkinter import filedialog, Label, Entry, Button, Tk
+from tkinter import filedialog
 import pandas as pd
 
 def buscadorDeArquivo():
@@ -25,7 +25,7 @@ def abrirarquivos():
     data = pd.read_excel(file_path, dtype=str)  # tudo como texto
 
     # Dados do usuário
-    nome = data['Nome_Funcionario'].tolist()
+    nome = [item for item in data['Nome_Funcionario'].tolist() if str(item)]
     setor = data['Setor'].tolist()
     funcao = data['Funcao'].tolist()
     celular = data['Celular Institucional'].tolist()
@@ -71,13 +71,13 @@ def variaveistxt():
     <u>Celular</u>: {} <br>
     <u>Telefone</u>: {} <br>
     <u>Ramal</u>: {} <br>
-    <u>E-mail</u>: {} <br></p>'''.format(nome, setor, funcao, celular, telefone, ramal, email)
+    <u>E-mail</u>: {} <br></p>'''.format(', '.join(nome), ', '.join(setor), ', '.join(funcao), ', '.join(celular), ', '.join(telefone), ', '.join(ramal), ', '.join(email))
 
     texto3 = '''<p style='font-family:calibri;'>Em caso de dúvidas na execução do procedimento ou em caso de mudança na assinatura enviada,
     retornar este e-mail clicando em <b>Responder a Todos</b>.
     <br><br>Desde já, agradecemos sua colaboração!<br></p>'''
 
-    return txtPrincipal, dados, texto3, assLucasP, nome
+    return txtPrincipal, dados, texto3, assLucasP, ', '.join(nome)
 
 def envia_email():
     nome, txtPrincipal, dados, texto3, assLucasP = variaveistxt()
