@@ -25,7 +25,7 @@ def abrirarquivos():
     data = pd.read_excel(file_path, dtype=str)  # tudo como texto
 
     # Dados do usuário
-    nome = [item for item in data['Nome_Funcionario'].tolist() if str(item)]
+    nome = data['Nome_Funcionario'].tolist()
     setor = data['Setor'].tolist()
     funcao = data['Funcao'].tolist()
     celular = data['Celular Institucional'].tolist()
@@ -64,6 +64,8 @@ def variaveistxt():
     Será necessário <b>SALVAR a imagem enviada em anexo em seu computador</b>
     e <b>ACESSAR o manual referente à ferramenta de e-mail utilizada: Outlook, Thunderbird ou Webmail (OWA).</b><br></p>'''
 
+    dadosetc = (nome, setor, funcao, celular, telefone, ramal, email)
+
     dados = '''<p style='font-family:calibri;'>Seguem as informações da assinatura em anexo:<br><br>
     <u>Nome</u>: {} <br>
     <u>Setor</u>: {} <br>
@@ -71,29 +73,31 @@ def variaveistxt():
     <u>Celular</u>: {} <br>
     <u>Telefone</u>: {} <br>
     <u>Ramal</u>: {} <br>
-    <u>E-mail</u>: {} <br></p>'''.format(', '.join(nome), ', '.join(setor), ', '.join(funcao), ', '.join(celular), ', '.join(telefone), ', '.join(ramal), ', '.join(email))
+    <u>E-mail</u>: {} <br></p>'''.format(str(nome), str(setor), funcao, celular, telefone, ramal, email)
 
     texto3 = '''<p style='font-family:calibri;'>Em caso de dúvidas na execução do procedimento ou em caso de mudança na assinatura enviada,
     retornar este e-mail clicando em <b>Responder a Todos</b>.
     <br><br>Desde já, agradecemos sua colaboração!<br></p>'''
 
-    return txtPrincipal, dados, texto3, assLucasP, ', '.join(nome)
+    return txtPrincipal, dados, texto3, assLucasP, nome, dadosetc
 
 def envia_email():
-    nome, txtPrincipal, dados, texto3, assLucasP = variaveistxt()
+    txtPrincipal, dados, texto3, assLucasP, nome, dadosetc = variaveistxt()
 
     outlook = win32.Dispatch('outlook.application') # Abrir o Outlook
     mail = outlook.CreateItem(0)  # Criar um novo email
 
-    mail.Display()  # Exibir o email
+    # mail.Display()  # Exibir o email
     
     mail.To = 'lucasprs@camed.com.br' # Destinatário
     mail.CC = '' # Com Cópia
     
     mail.Subject = 'Assunto do Email - {}'.format(nome)  # Assunto
     
+    print(dadosetc)
+
     # Corpo do Email
-    mail.HTMLBody = txtPrincipal + dados + texto3 + assLucasP
+    #mail.HTMLBody = txtPrincipal + dados + texto3 + assLucasP
 
     # Anexos usar imagem assLucasP da pasta do projeto
     assRemetente = os.getcwd() + '\\AssLucasP.png'
