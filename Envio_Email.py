@@ -22,6 +22,7 @@ def buscadorDeArquivo():
 def abrirarquivos():
     # Abrir o arquivo
     file_path = buscadorDeArquivo()
+    # file_path = os.path.join(os.getcwd(), 'Dados p. preencher.xlsx')
     data = pd.read_excel(file_path, dtype=str)  # tudo como texto
 
     # Dados do usuário
