@@ -17,3 +17,6 @@ Versão 1.4
 > Mudança na importação de arquivos criando a pasta buscadorarquivos
 > mudança na captura dos dados.
 > organização de codigo
+
+1.4.1
+> Atualização em caso de dados vazios 'nan' para '-' com o uso do fillna()

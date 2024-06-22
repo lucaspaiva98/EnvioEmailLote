@@ -14,14 +14,13 @@ def coleta_dados():
     data = executarleitura()
 
     # Dados do usuário para lista
-    # nome = [str(item) for item in data['Nome_Funcionario'].tolist() if item]
-    nome = data['Nome_Funcionario'].tolist()
-    setor = data['Setor'].tolist()
-    funcao = data['Funcao'].tolist()
-    celular = data['Celular Institucional'].tolist()
-    telefone = data['Contato_Empresarial'].tolist()
-    ramal = data['Ramal'].tolist()
-    email = data['Email'].tolist()
+    nome = data['Nome_Funcionario'].fillna('-').tolist()
+    setor = data['Setor'].fillna('-').tolist()
+    funcao = data['Funcao'].fillna('-').tolist()
+    celular = data['Celular Institucional'].fillna('-').tolist()
+    telefone = data['Contato_Empresarial'].fillna('-').tolist()
+    ramal = data['Ramal'].fillna('-').tolist()
+    email = data['Email'].fillna('-').tolist()
 
     return nome, setor, funcao, celular, telefone, ramal, email
 
@@ -39,19 +38,19 @@ def variaveistxt():
     e <b>ACESSAR o manual referente à ferramenta de e-mail utilizada: Outlook, Thunderbird ou Webmail (OWA).</b><br></p>'''
 
     dados = '''<p style='font-family:calibri;'>Seguem as informações da assinatura em anexo:<br><br>
-    <u>Nome</u>: {} <br>
-    <u>Setor</u>: {} <br>
-    <u>Função</u>: {} <br>
-    <u>Celular</u>: {} <br>
-    <u>Telefone</u>: {} <br>
-    <u>Ramal</u>: {} <br>
-    <u>E-mail</u>: {} <br></p>'''.format(nome[i], setor[i], funcao[i], celular[i], telefone[i], ramal[i], email[i])
+    <u>Nome</u>: {}<br>
+    <u>Setor</u>: {}<br>
+    <u>Função</u>: {}<br>
+    <u>Celular</u>: {}<br>
+    <u>Telefone</u>: {}<br>
+    <u>Ramal</u>: {}<br>
+    <u>E-mail</u>: {}<br></p>'''.format(nome[i], setor[i], funcao[i], celular[i], telefone[i], ramal[i], email[i])
 
     texto3 = '''<p style='font-family:calibri;'>Em caso de dúvidas na execução do procedimento ou em caso de mudança na assinatura enviada,
     retornar este e-mail clicando em <b>Responder a Todos</b>.
     <br><br>Desde já, agradecemos sua colaboração!<br></p>'''
 
-    return txtPrincipal, dados, texto3, assLucasP, nome, dados
+    return txtPrincipal, dados, texto3, assLucasP, nome, dados, email
 
 # def path_AssRemetente(Ass_Remetente):
 #     # Caminho para a imagem
@@ -70,14 +69,14 @@ def variaveistxt():
 #     return img
 
 def envia_email():
-    txtPrincipal, dados, texto3, assLucasP, nome, dados = variaveistxt()
+    txtPrincipal, dados, texto3, assLucasP, nome, dados, email = variaveistxt()
 
     outlook = win32.Dispatch('outlook.application') # Abrir o Outlook
     mail = outlook.CreateItem(0)  # Criar um novo email
 
     mail.Display()  # Exibir o email
     
-    mail.To = 'lucasprs@camed.com.br' # Destinatário
+    mail.To = email[i] # Destinatário
     mail.CC = '' # Com Cópia
     
     mail.Subject = 'Assinatura de E-mail - {}'.format(nome[i])  # Assunto
@@ -105,5 +104,6 @@ def exibir_dados():
 
 if __name__ == '__main__':
     envia_email()
+    # exibir_dados()
 
 # print('Emails Enviados com Sucesso')
