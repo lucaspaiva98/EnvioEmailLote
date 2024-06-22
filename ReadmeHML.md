@@ -9,3 +9,12 @@ Versão 1.1
 
 Versão 1.2
 > Mudança no path da assinatura
+
+
+versão 1.3 teste
+> contém apenas os teste de importação e recebimento de dados da planilha
+
+Versão 1.3
+> Mudança na importação de arquivos criando a pasta buscadorarquivos
+> mudança na captura dos dados.
+> organização de codigo
