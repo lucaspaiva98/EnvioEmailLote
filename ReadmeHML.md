@@ -20,3 +20,6 @@ Versão 1.4
 
 1.4.1
 > Atualização em caso de dados vazios 'nan' para '-' com o uso do fillna()
+
+versão 1.5
+> Mudança na assintaura remetente

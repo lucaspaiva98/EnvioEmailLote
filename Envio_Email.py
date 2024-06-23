@@ -27,10 +27,6 @@ def coleta_dados():
 def variaveistxt():
     nome, setor, funcao, celular, telefone, ramal, email = coleta_dados()
 
-    assremetenteEnvio = 'AssLucasP.png'
-    assLucasP = '''<span style='font-family:calibri;'><br>Atenciosamente,<span><br>
-    <img src="file:///E:/Bkp/pc/Programas camed/Lucas P/MPython/bkp/bk1/EnvioEmailLote/{}">'''.format(assremetenteEnvio)
-
     txtPrincipal = '''<p style='font-family:calibri;'>Caro colaborador(a),<br><br>
     Com o objetivo de padronizar as assinaturas de e-mail dos funcionários do Grupo Camed,
     <b>estamos enviando sua assinatura ajustada em anexo, juntamente com o manual contendo o passo a passo a ser seguido</b> para a atualização.<br>
@@ -50,26 +46,33 @@ def variaveistxt():
     retornar este e-mail clicando em <b>Responder a Todos</b>.
     <br><br>Desde já, agradecemos sua colaboração!<br></p>'''
 
-    return txtPrincipal, dados, texto3, assLucasP, nome, dados, email
+    return txtPrincipal, dados, texto3, nome, email
 
-# def path_AssRemetente(Ass_Remetente):
-#     # Caminho para a imagem
-#     image_path = os.path.join(os.getcwd(), Ass_Remetente)
+def Remetente(ass_remetente):
+    # Caminho para a imagem
+    image_path = os.path.join(os.getcwd(), ass_remetente)
 
-#     # Abrindo a imagem em modo binário
-#     with open(image_path, 'rb') as f:
-#         img_Ass = f.read()
+    # Abrindo a imagem em modo binário
+    with open(image_path, 'rb') as f:
+        img_Ass = f.read()
     
-#     # Cria um objeto MIMEImage
-#     img = MIMEImage(img_Ass)
+    # Cria um objeto MIMEImage
+    img = MIMEImage(img_Ass)
 
-#     # Adiciona um 'Content-ID' para a imagem
-#     img.add_header('Content-ID', '<{}>'.format(Ass_Remetente))
+    # Adiciona um 'Content-ID' para a imagem
+    img.add_header('Content-ID', '<{}>'.format(ass_remetente))
 
-#     return img
+    # Gera a string HTML para a assinatura
+    ass_html = '''<span style='font-family:calibri;'<br>Atenciosamente <span><br>
+    <img src="cid:{}">'''.format(ass_remetente)
+
+    return img, ass_html
 
 def envia_email():
-    txtPrincipal, dados, texto3, assLucasP, nome, dados, email = variaveistxt()
+    txtPrincipal, dados, texto3, nome, email = variaveistxt()
+
+    assRemetenteEnvio = 'AssLucasP.png'
+    img, assLucasP = Remetente(assRemetenteEnvio)
 
     outlook = win32.Dispatch('outlook.application') # Abrir o Outlook
     mail = outlook.CreateItem(0)  # Criar um novo email
